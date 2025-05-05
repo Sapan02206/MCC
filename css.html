@@ -245,9 +245,31 @@
             </div>
             <div class="mt-8">
               <h4 class="text-indigo-700 font-semibold mb-3">Attendance Records</h4>
-              <div class="overflow-x-auto">
+              <div class="mb-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div class="flex-1">
+                  <label for="filter-batch" class="block font-semibold text-indigo-700 mb-1">Filter by Batch</label>
+                  <select id="filter-batch" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">All Batches</option>
+                  </select>
+                </div>
+                <div class="flex-1">
+                  <label for="filter-student" class="block font-semibold text-indigo-700 mb-1">Filter by Student</label>
+                  <select id="filter-student" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" disabled>
+                    <option value="">All Students</option>
+                  </select>
+                </div>
+                <div class="flex-1">
+                  <label for="filter-month" class="block font-semibold text-indigo-700 mb-1">Filter by Month</label>
+                  <input type="month" id="filter-month" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+                <div class="flex-1">
+                  <label for="filter-date" class="block font-semibold text-indigo-700 mb-1">Filter by Date</label>
+                  <input type="date" id="filter-date" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+              </div>
+              <div class="overflow-x-auto max-h-96 overflow-y-auto">
                 <table class="min-w-full bg-white rounded-md shadow-md" role="table" aria-label="Attendance records table">
-                  <thead class="bg-indigo-600 text-white">
+                  <thead class="bg-indigo-600 text-white sticky top-0">
                     <tr>
                       <th class="py-2 px-4 text-left">Student</th>
                       <th class="py-2 px-4 text-left">Batch</th>
@@ -455,6 +477,23 @@
         </section>
 
         <section>
+          <h4 class="text-xl font-semibold text-indigo-600 mb-3">Filter Attendance Records</h4>
+          <div class="mb-6 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div class="flex-1">
+              <label for="student-filter-batch" class="block font-semibold text-indigo-700 mb-1">Select Batch</label>
+              <select id="student-filter-batch" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">All Batches</option>
+              </select>
+            </div>
+            <div class="flex-1">
+              <label for="student-filter-month" class="block font-semibold text-indigo-700 mb-1">Filter by Month</label>
+              <input type="month" id="student-filter-month" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div class="flex-1">
+              <label for="student-filter-date" class="block font-semibold text-indigo-700 mb-1">Filter by Date</label>
+              <input type="date" id="student-filter-date" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
           <h4 class="text-xl font-semibold text-indigo-600 mb-3">Attendance Records</h4>
           <div class="overflow-x-auto">
             <table class="min-w-full bg-indigo-50 rounded-md shadow-md" role="table" aria-label="Student attendance records table">
@@ -657,6 +696,7 @@
     // Batches Management Elements
     const batchForm = document.getElementById('batch-form');
     const batchesList = document.getElementById('batches-list');
+    const batchNameInput = document.getElementById('batch-name');
 
     // Add Student Elements
     const addStudentForm = document.getElementById('add-student-form');
@@ -691,6 +731,17 @@
 
     // Navigation buttons in admin sidebar
     const adminNavButtons = document.querySelectorAll('nav button[data-section]');
+
+    // Filter elements for attendance records (admin)
+    const filterBatchSelect = document.getElementById('filter-batch');
+    const filterStudentSelect = document.getElementById('filter-student');
+    const filterMonthInput = document.getElementById('filter-month');
+    const filterDateInput = document.getElementById('filter-date');
+
+    // Filter elements for attendance records (student)
+    const studentFilterBatchSelect = document.getElementById('student-filter-batch');
+    const studentFilterMonthInput = document.getElementById('student-filter-month');
+    const studentFilterDateInput = document.getElementById('student-filter-date');
 
     // Current logged in user
     let currentUser = getLoggedInUser();
@@ -751,6 +802,7 @@
       const users = getUsers().filter((u) => u.role === 'student');
       attendanceStudentSelect.innerHTML = '<option value="" disabled selected>Select student</option>';
       resultStudentSelect.innerHTML = '<option value="" disabled selected>Select student</option>';
+      filterStudentSelect.innerHTML = '<option value="">All Students</option>';
       users.forEach((student) => {
         const option1 = document.createElement('option');
         option1.value = student.id;
@@ -761,7 +813,13 @@
         option2.value = student.id;
         option2.textContent = student.name + (student.batchId ? ` (${getBatchNameById(student.batchId)})` : '');
         resultStudentSelect.appendChild(option2);
+
+        const option3 = document.createElement('option');
+        option3.value = student.id;
+        option3.textContent = student.name + (student.batchId ? ` (${getBatchNameById(student.batchId)})` : '');
+        filterStudentSelect.appendChild(option3);
       });
+      filterStudentSelect.disabled = false;
     }
 
     // Populate batches dropdowns for admin
@@ -770,6 +828,8 @@
       attendanceBatchSelect.innerHTML = '<option value="" disabled selected>Select batch</option>';
       studentBatchSelect.innerHTML = '<option value="" disabled selected>Select batch</option>';
       examBatchSelect.innerHTML = '<option value="" disabled selected>Select batch</option>';
+      filterBatchSelect.innerHTML = '<option value="">All Batches</option>';
+      studentFilterBatchSelect.innerHTML = '<option value="">All Batches</option>';
       batches.forEach((batch) => {
         const option1 = document.createElement('option');
         option1.value = batch.id;
@@ -785,6 +845,16 @@
         option3.value = batch.id;
         option3.textContent = batch.name;
         examBatchSelect.appendChild(option3);
+
+        const option4 = document.createElement('option');
+        option4.value = batch.id;
+        option4.textContent = batch.name;
+        filterBatchSelect.appendChild(option4);
+
+        const option5 = document.createElement('option');
+        option5.value = batch.id;
+        option5.textContent = batch.name;
+        studentFilterBatchSelect.appendChild(option5);
       });
     }
 
@@ -812,11 +882,31 @@
       return student ? student.phone : '';
     }
 
-    // Update attendance records table in admin
+    // Update attendance records table in admin with filters
     function updateAttendanceRecordsTable() {
       const attendance = getAttendance();
+      const selectedBatch = filterBatchSelect.value;
+      const selectedStudent = filterStudentSelect.value;
+      const selectedMonth = filterMonthInput.value; // format: YYYY-MM
+      const selectedDate = filterDateInput.value; // format: YYYY-MM-DD
+
+      let filteredAttendance = attendance;
+
+      if (selectedBatch) {
+        filteredAttendance = filteredAttendance.filter(a => a.batchId === selectedBatch);
+      }
+      if (selectedStudent) {
+        filteredAttendance = filteredAttendance.filter(a => a.studentId === selectedStudent);
+      }
+      if (selectedMonth) {
+        filteredAttendance = filteredAttendance.filter(a => a.date.startsWith(selectedMonth));
+      }
+      if (selectedDate) {
+        filteredAttendance = filteredAttendance.filter(a => a.date === selectedDate);
+      }
+
       attendanceRecordsTbody.innerHTML = '';
-      attendance.forEach((record) => {
+      filteredAttendance.forEach((record) => {
         const tr = document.createElement('tr');
         tr.classList.add('hover:bg-indigo-100');
         const { date, day } = formatDateAndDay(record.date);
@@ -851,15 +941,64 @@
       updateStudentExamSchedule();
     }
 
-    // Update batches list in admin
+    // Update batches list in admin with delete buttons
     function updateBatchesList() {
       const batches = getBatches();
       batchesList.innerHTML = '';
       batches.forEach((batch) => {
         const li = document.createElement('li');
-        li.textContent = batch.name;
+        li.className = 'flex justify-between items-center';
+        const span = document.createElement('span');
+        span.textContent = batch.name;
+        li.appendChild(span);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'ml-4 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center space-x-1';
+        delBtn.title = `Delete batch ${batch.name}`;
+        delBtn.innerHTML = `<i class="fas fa-trash-alt"></i><span>Delete</span>`;
+        delBtn.onclick = () => {
+          if (!confirm(`Are you sure you want to delete the batch "${batch.name}"? This will remove the batch from all students and related data.`)) return;
+          deleteBatch(batch.id);
+        };
+
+        li.appendChild(delBtn);
         batchesList.appendChild(li);
       });
+    }
+
+    // Delete batch and update related data
+    function deleteBatch(batchId) {
+      let batches = getBatches();
+      batches = batches.filter(b => b.id !== batchId);
+      setBatches(batches);
+
+      // Remove batchId from students who belong to this batch
+      let users = getUsers();
+      users = users.map(u => {
+        if (u.batchId === batchId) {
+          return { ...u, batchId: null };
+        }
+        return u;
+      });
+      setUsers(users);
+
+      // Remove attendance records for this batch
+      let attendance = getAttendance();
+      attendance = attendance.filter(a => a.batchId !== batchId);
+      setAttendance(attendance);
+
+      // Remove exams for this batch
+      let exams = getExams();
+      exams = exams.filter(e => e.batchId !== batchId);
+      setExams(exams);
+
+      alert('Batch deleted successfully.');
+
+      populateBatchesDropdowns();
+      populateStudentsDropdowns();
+      updateBatchesList();
+      updateStudentsListTable();
+      updateAttendanceRecordsTable();
     }
 
     // Update students list table in Add Student section
@@ -1329,12 +1468,29 @@
       });
     }
 
-    // Update student attendance table
+    // Update student attendance table with filters
     function updateStudentAttendance() {
       if (!currentUser) return;
       const attendance = getAttendance().filter((a) => a.studentId === currentUser.id);
+
+      const selectedBatch = studentFilterBatchSelect.value;
+      const selectedMonth = studentFilterMonthInput.value;
+      const selectedDate = studentFilterDateInput.value;
+
+      let filteredAttendance = attendance;
+
+      if (selectedBatch) {
+        filteredAttendance = filteredAttendance.filter(a => a.batchId === selectedBatch);
+      }
+      if (selectedMonth) {
+        filteredAttendance = filteredAttendance.filter(a => a.date.startsWith(selectedMonth));
+      }
+      if (selectedDate) {
+        filteredAttendance = filteredAttendance.filter(a => a.date === selectedDate);
+      }
+
       studentAttendanceRecords.innerHTML = '';
-      attendance.forEach((record) => {
+      filteredAttendance.forEach((record) => {
         const tr = document.createElement('tr');
         tr.classList.add('hover:bg-indigo-100');
         const { date, day } = formatDateAndDay(record.date);
@@ -1621,6 +1777,7 @@
         studentDashboard.classList.remove('hidden');
         studentUsernameDisplay.textContent = currentUser.name;
         studentNameDisplay.textContent = currentUser.name;
+        populateStudentFilterBatches();
         updateStudentAttendance();
         updateStudentExamSchedule();
         updateStudentResultsList();
@@ -1648,6 +1805,191 @@
         toggleCredentialsIcon.classList.add('fa-chevron-up');
       }
     });
+
+    // Filters change events for attendance records (admin)
+    filterBatchSelect.addEventListener('change', () => {
+      const batchId = filterBatchSelect.value;
+      if (batchId) {
+        // Filter students dropdown to only students in selected batch
+        const students = getUsers().filter(u => u.role === 'student' && u.batchId === batchId);
+        filterStudentSelect.innerHTML = '<option value="">All Students</option>';
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name;
+          filterStudentSelect.appendChild(option);
+        });
+        filterStudentSelect.disabled = false;
+      } else {
+        // Show all students
+        const students = getUsers().filter(u => u.role === 'student');
+        filterStudentSelect.innerHTML = '<option value="">All Students</option>';
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name;
+          filterStudentSelect.appendChild(option);
+        });
+        filterStudentSelect.disabled = false;
+      }
+      updateAttendanceRecordsTable();
+    });
+
+    filterStudentSelect.addEventListener('change', () => {
+      updateAttendanceRecordsTable();
+    });
+
+    filterMonthInput.addEventListener('change', () => {
+      // Clear date filter if month filter is set
+      if (filterMonthInput.value) {
+        filterDateInput.value = '';
+      }
+      updateAttendanceRecordsTable();
+    });
+
+    filterDateInput.addEventListener('change', () => {
+      // Clear month filter if date filter is set
+      if (filterDateInput.value) {
+        filterMonthInput.value = '';
+      }
+      updateAttendanceRecordsTable();
+    });
+
+    // Populate batches dropdown for student attendance filter
+    function populateStudentFilterBatches() {
+      const batches = getBatches();
+      studentFilterBatchSelect.innerHTML = '<option value="">All Batches</option>';
+      batches.forEach(batch => {
+        const option = document.createElement('option');
+        option.value = batch.id;
+        option.textContent = batch.name;
+        studentFilterBatchSelect.appendChild(option);
+      });
+    }
+
+    // Student attendance filter change events
+    studentFilterBatchSelect.addEventListener('change', () => {
+      updateStudentAttendance();
+    });
+    studentFilterMonthInput.addEventListener('change', () => {
+      if (studentFilterMonthInput.value) {
+        studentFilterDateInput.value = '';
+      }
+      updateStudentAttendance();
+    });
+    studentFilterDateInput.addEventListener('change', () => {
+      if (studentFilterDateInput.value) {
+        studentFilterMonthInput.value = '';
+      }
+      updateStudentAttendance();
+    });
+
+    // Batch form submit (Add batch)
+    batchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const batchName = batchNameInput.value.trim();
+      if (!batchName) {
+        alert('Please enter a batch name.');
+        return;
+      }
+      const batches = getBatches();
+      if (batches.some(b => b.name.toLowerCase() === batchName.toLowerCase())) {
+        alert('Batch name already exists.');
+        return;
+      }
+      batches.push({ id: `batch-${Date.now()}`, name: batchName });
+      setBatches(batches);
+      alert('Batch added successfully.');
+      batchForm.reset();
+      populateBatchesDropdowns();
+      updateBatchesList();
+    });
+
+    // Add student form submit (Add or update student)
+    addStudentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = studentNameInput.value.trim();
+      const email = studentEmailInput.value.trim();
+      const phone = studentPhoneInput.value.trim();
+      const username = studentUsernameInput.value.trim();
+      const password = studentPasswordInput.value;
+      const batchId = studentBatchSelect.value;
+
+      if (!name || !phone || !username || !password || !batchId) {
+        alert('Please fill all required fields.');
+        return;
+      }
+
+      const users = getUsers();
+      const editingId = addStudentForm.dataset.editingId;
+
+      // Check username uniqueness
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase() && u.id !== editingId)) {
+        alert('Username already exists. Please choose another.');
+        return;
+      }
+
+      if (editingId) {
+        // Update existing student
+        const index = users.findIndex(u => u.id === editingId);
+        if (index !== -1) {
+          users[index].name = name;
+          users[index].email = email;
+          users[index].phone = phone;
+          users[index].username = username;
+          users[index].password = password;
+          users[index].batchId = batchId;
+          setUsers(users);
+          alert('Student updated successfully.');
+        }
+        delete addStudentForm.dataset.editingId;
+        addStudentForm.querySelector('button[type="submit"]').textContent = 'Add Student';
+      } else {
+        // Add new student
+        const newStudent = {
+          id: `student-${Date.now()}`,
+          name,
+          email,
+          phone,
+          username,
+          password,
+          role: 'student',
+          batchId,
+        };
+        users.push(newStudent);
+        setUsers(users);
+        alert('Student added successfully.');
+      }
+
+      addStudentForm.reset();
+      populateStudentsDropdowns();
+      updateStudentsListTable();
+    });
+
+    // Initial UI setup on page load if user is logged in
+    if (currentUser) {
+      loginScreen.classList.add('hidden');
+      if (currentUser.role === 'admin') {
+        adminDashboard.classList.remove('hidden');
+        adminUsernameDisplay.textContent = currentUser.name;
+        showAdminSection('admin-dashboard-section');
+        adminNavButtons.forEach((b) => {
+          if (b.getAttribute('data-section') === 'dashboard') {
+            b.classList.add('bg-indigo-100');
+          } else {
+            b.classList.remove('bg-indigo-100');
+          }
+        });
+      } else if (currentUser.role === 'student') {
+        studentDashboard.classList.remove('hidden');
+        studentUsernameDisplay.textContent = currentUser.name;
+        studentNameDisplay.textContent = currentUser.name;
+        populateStudentFilterBatches();
+        updateStudentAttendance();
+        updateStudentExamSchedule();
+        updateStudentResultsList();
+      }
+    }
 
   </script>
 </body>
