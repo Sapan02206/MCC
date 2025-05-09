@@ -38,12 +38,12 @@
       #sidebar-toggle-btn {
         display: inline-flex;
       }
-      #admin-back-btn {
+      #student-back-btn {
         left: 4rem !important;
       }
     }
     /* Back button repositioned top-right */
-    #admin-back-btn {
+    #student-back-btn {
       top: 1rem;
       right: 1rem;
       left: auto !important;
@@ -457,10 +457,15 @@
       </div>
     </div>
 
-    <!-- Student Dashboard -->
+    <!-- Student Dashboard (Admin style) -->
     <div id="student-dashboard" class="hidden flex flex-col min-h-screen">
-      <header class="bg-indigo-700 text-white flex items-center justify-between px-6 py-4 shadow-md">
-        <h2 class="text-xl font-semibold">MCC Madhuram Commerce Classes - Student Dashboard</h2>
+      <header class="bg-indigo-700 text-white flex items-center justify-between px-6 py-4 shadow-md relative">
+        <div class="flex items-center space-x-4">
+          <button id="student-sidebar-toggle-btn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2 class="text-xl font-semibold">MCC Madhuram Commerce Classes - Student Dashboard</h2>
+        </div>
         <div class="flex items-center space-x-4">
           <button id="student-profile-btn" class="flex items-center space-x-2 hover:underline focus:outline-none">
             <i class="fas fa-user-circle text-2xl"></i>
@@ -471,86 +476,155 @@
           </button>
         </div>
       </header>
-      <main class="flex-1 overflow-y-auto p-6 bg-white max-w-5xl mx-auto w-full space-y-8">
-        <section>
-          <h3 class="text-2xl font-semibold text-indigo-700 mb-4">Welcome, <span id="student-name-display"></span></h3>
-        </section>
+      <div class="flex flex-1 overflow-hidden relative">
+        <nav id="student-sidebar" class="w-64 bg-indigo-50 border-r border-indigo-200 overflow-y-auto hidden md:block" aria-label="Student sidebar navigation">
+          <ul class="py-6 space-y-1">
+            <li>
+              <button data-section="dashboard" class="w-full text-left px-6 py-3 flex items-center space-x-3 text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none rounded-md">
+                <i class="fas fa-tachometer-alt fa-lg"></i>
+                <span>Dashboard</span>
+              </button>
+            </li>
+            <li>
+              <button data-section="profile" class="w-full text-left px-6 py-3 flex items-center space-x-3 text-indigo-700 font-semibold hover:bg-indigo-100 focus:outline-none rounded-md">
+                <i class="fas fa-user fa-lg"></i>
+                <span>Profile</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+        <main class="flex-1 overflow-y-auto p-6 bg-white relative max-w-full">
+          <!-- Back Button -->
+          <button id="student-back-btn" class="hidden absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-400 flex items-center space-x-2 z-50">
+            <i class="fas fa-arrow-left"></i><span>Back</span>
+          </button>
 
-        <section>
-          <h4 class="text-xl font-semibold text-indigo-600 mb-3">Filter Attendance Records</h4>
-          <div class="mb-6 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-            <div class="flex-1">
-              <label for="student-filter-batch" class="block font-semibold text-indigo-700 mb-1">Select Batch</label>
-              <select id="student-filter-batch" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">All Batches</option>
-              </select>
+          <!-- Dashboard Section -->
+          <section id="student-dashboard-section" class="space-y-6">
+            <h3 class="text-2xl font-semibold text-indigo-700 mb-4">Welcome, <span id="student-name-display"></span></h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <button id="student-open-attendance" class="flex flex-col items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg p-6 shadow-md transition focus:outline-none focus:ring-4 focus:ring-indigo-400">
+                <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                <span class="text-lg font-semibold">Attendance Records</span>
+              </button>
+              <button id="student-open-exam-schedule" class="flex flex-col items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg p-6 shadow-md transition focus:outline-none focus:ring-4 focus:ring-indigo-400">
+                <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+                <span class="text-lg font-semibold">Exam Schedule</span>
+              </button>
+              <button id="student-open-results" class="flex flex-col items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg p-6 shadow-md transition focus:outline-none focus:ring-4 focus:ring-indigo-400">
+                <i class="fas fa-file-alt fa-3x mb-3"></i>
+                <span class="text-lg font-semibold">Results</span>
+              </button>
             </div>
-            <div class="flex-1">
-              <label for="student-filter-month" class="block font-semibold text-indigo-700 mb-1">Filter by Month</label>
-              <input type="month" id="student-filter-month" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-            <div class="flex-1">
-              <label for="student-filter-date" class="block font-semibold text-indigo-700 mb-1">Filter by Date</label>
-              <input type="date" id="student-filter-date" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-          </div>
-          <h4 class="text-xl font-semibold text-indigo-600 mb-3">Attendance Records</h4>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-indigo-50 rounded-md shadow-md" role="table" aria-label="Student attendance records table">
-              <thead class="bg-indigo-600 text-white">
-                <tr>
-                  <th class="py-2 px-4 text-left">Date</th>
-                  <th class="py-2 px-4 text-left">Day</th>
-                  <th class="py-2 px-4 text-left">Status</th>
-                  <th class="py-2 px-4 text-left">Batch</th>
-                </tr>
-              </thead>
-              <tbody id="student-attendance-records" class="divide-y divide-indigo-300"></tbody>
-            </table>
-          </div>
-        </section>
+          </section>
 
-        <section>
-          <h4 class="text-xl font-semibold text-indigo-600 mb-3">Exam Schedule</h4>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-indigo-50 rounded-md shadow-md" role="table" aria-label="Student exam schedule table">
-              <thead class="bg-indigo-600 text-white">
-                <tr>
-                  <th class="py-2 px-4 text-left">Exam Name</th>
-                  <th class="py-2 px-4 text-left">Date</th>
-                  <th class="py-2 px-4 text-left">Time</th>
-                </tr>
-              </thead>
-              <tbody id="student-exam-schedule" class="divide-y divide-indigo-300"></tbody>
-            </table>
-          </div>
-        </section>
+          <!-- Profile Section -->
+          <section id="student-profile-section" class="hidden max-w-3xl mx-auto bg-indigo-50 p-6 rounded-md shadow-md space-y-6">
+            <h3 class="text-2xl font-semibold text-indigo-700">Profile</h3>
+            <form id="student-profile-form" class="space-y-4" autocomplete="off">
+              <div>
+                <label for="student-name-input" class="block font-medium text-indigo-800 mb-1">Name</label>
+                <input type="text" id="student-name-input" name="student-name" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="name" required />
+              </div>
+              <div>
+                <label for="student-email-input" class="block font-medium text-indigo-800 mb-1">Email</label>
+                <input type="email" id="student-email-input" name="student-email" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="email" />
+              </div>
+              <div>
+                <label for="student-phone-input" class="block font-medium text-indigo-800 mb-1">Phone</label>
+                <input type="tel" id="student-phone-input" name="student-phone" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="tel" required />
+              </div>
+              <hr class="border-indigo-300" />
+              <div>
+                <label for="student-username-input" class="block font-medium text-indigo-800 mb-1">Username</label>
+                <input type="text" id="student-username-input" name="student-username" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="username" required />
+              </div>
+              <div>
+                <label for="student-password-input" class="block font-medium text-indigo-800 mb-1">New Password</label>
+                <input type="password" id="student-password-input" name="student-password" placeholder="Leave blank to keep current password" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="new-password" />
+              </div>
+              <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition">Update Profile</button>
+            </form>
+          </section>
 
-        <section>
-          <h4 class="text-xl font-semibold text-indigo-600 mb-3">Results</h4>
-          <div id="student-results-list" class="space-y-6 max-w-4xl mx-auto">
-            <!-- Dynamically filled with clickable result titles -->
-          </div>
-          <div id="student-results-details" class="mt-6 max-w-4xl mx-auto bg-indigo-50 rounded-md shadow-md p-6 hidden" aria-live="polite" aria-atomic="true">
-            <button id="close-result-details" class="mb-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center space-x-2">
-              <i class="fas fa-times"></i><span>Close</span>
-            </button>
-            <h5 id="result-details-title" class="text-xl font-semibold text-indigo-700 mb-4"></h5>
+          <!-- Attendance Records Section -->
+          <section id="student-attendance-section" class="hidden max-w-5xl mx-auto bg-indigo-50 p-6 rounded-md shadow-md">
+            <h3 class="text-2xl font-semibold text-indigo-700 mb-6">Attendance Records</h3>
+            <div class="mb-6 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+              <div class="flex-1">
+                <label for="student-filter-batch" class="block font-semibold text-indigo-700 mb-1">Select Batch</label>
+                <select id="student-filter-batch" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="">All Batches</option>
+                </select>
+              </div>
+              <div class="flex-1">
+                <label for="student-filter-month" class="block font-semibold text-indigo-700 mb-1">Filter by Month</label>
+                <input type="month" id="student-filter-month" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div class="flex-1">
+                <label for="student-filter-date" class="block font-semibold text-indigo-700 mb-1">Filter by Date</label>
+                <input type="date" id="student-filter-date" class="w-full border border-indigo-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              </div>
+            </div>
             <div class="overflow-x-auto">
-              <table id="result-details-table" class="min-w-full bg-white rounded-md shadow-md" role="table" aria-label="Detailed result table">
+              <table class="min-w-full bg-indigo-50 rounded-md shadow-md" role="table" aria-label="Student attendance records table">
                 <thead class="bg-indigo-600 text-white">
                   <tr>
-                    <th class="py-2 px-4 text-left">Subject</th>
-                    <th class="py-2 px-4 text-left">Marks Obtained</th>
-                    <th class="py-2 px-4 text-left">Total Marks</th>
+                    <th class="py-2 px-4 text-left">Date</th>
+                    <th class="py-2 px-4 text-left">Day</th>
+                    <th class="py-2 px-4 text-left">Status</th>
+                    <th class="py-2 px-4 text-left">Batch</th>
                   </tr>
                 </thead>
-                <tbody id="result-details-tbody" class="divide-y divide-indigo-300"></tbody>
+                <tbody id="student-attendance-records" class="divide-y divide-indigo-300"></tbody>
               </table>
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+
+          <!-- Exam Schedule Section -->
+          <section id="student-exam-schedule-section" class="hidden max-w-5xl mx-auto bg-indigo-50 p-6 rounded-md shadow-md">
+            <h3 class="text-2xl font-semibold text-indigo-700 mb-6">Exam Schedule</h3>
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-indigo-50 rounded-md shadow-md" role="table" aria-label="Student exam schedule table">
+                <thead class="bg-indigo-600 text-white">
+                  <tr>
+                    <th class="py-2 px-4 text-left">Exam Name</th>
+                    <th class="py-2 px-4 text-left">Date</th>
+                    <th class="py-2 px-4 text-left">Time</th>
+                  </tr>
+                </thead>
+                <tbody id="student-exam-schedule" class="divide-y divide-indigo-300"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Results Section -->
+          <section id="student-results-section" class="hidden max-w-5xl mx-auto bg-indigo-50 p-6 rounded-md shadow-md space-y-6">
+            <h3 class="text-2xl font-semibold text-indigo-700 mb-6">Results</h3>
+            <div id="student-results-list" class="space-y-6 max-w-4xl mx-auto">
+              <!-- Dynamically filled with clickable result titles -->
+            </div>
+            <div id="student-results-details" class="mt-6 max-w-4xl mx-auto bg-indigo-50 rounded-md shadow-md p-6 hidden" aria-live="polite" aria-atomic="true">
+              <button id="close-result-details" class="mb-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center space-x-2">
+                <i class="fas fa-times"></i><span>Close</span>
+              </button>
+              <h5 id="result-details-title" class="text-xl font-semibold text-indigo-700 mb-4"></h5>
+              <div class="overflow-x-auto">
+                <table id="result-details-table" class="min-w-full bg-white rounded-md shadow-md" role="table" aria-label="Detailed result table">
+                  <thead class="bg-indigo-600 text-white">
+                    <tr>
+                      <th class="py-2 px-4 text-left">Subject</th>
+                      <th class="py-2 px-4 text-left">Marks Obtained</th>
+                      <th class="py-2 px-4 text-left">Total Marks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="result-details-tbody" class="divide-y divide-indigo-300"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
   </div>
 
@@ -729,8 +803,20 @@
     const resultDetailsTbody = document.getElementById('result-details-tbody');
     const closeResultDetailsBtn = document.getElementById('close-result-details');
 
+    const studentDashboardSection = document.getElementById('student-dashboard-section');
+    const studentProfileSection = document.getElementById('student-profile-section');
+    const studentAttendanceSection = document.getElementById('student-attendance-section');
+    const studentExamScheduleSection = document.getElementById('student-exam-schedule-section');
+    const studentResultsSection = document.getElementById('student-results-section');
+
+    const studentSidebar = document.getElementById('student-sidebar');
+    const studentSidebarToggleBtn = document.getElementById('student-sidebar-toggle-btn');
+    const studentBackBtn = document.getElementById('student-back-btn');
+
     // Navigation buttons in admin sidebar
     const adminNavButtons = document.querySelectorAll('nav button[data-section]');
+    // Navigation buttons in student sidebar
+    const studentNavButtons = studentSidebar.querySelectorAll('button[data-section]');
 
     // Filter elements for attendance records (admin)
     const filterBatchSelect = document.getElementById('filter-batch');
@@ -794,6 +880,33 @@
       // Close sidebar on mobile when navigating
       if (window.innerWidth <= 768) {
         sidebarNav.classList.remove('open');
+      }
+    }
+
+    // Show only one student section at a time
+    function showStudentSection(sectionId) {
+      [
+        studentDashboardSection,
+        studentProfileSection,
+        studentAttendanceSection,
+        studentExamScheduleSection,
+        studentResultsSection,
+      ].forEach((section) => {
+        if (section.id === sectionId) {
+          section.classList.remove('hidden');
+        } else {
+          section.classList.add('hidden');
+        }
+      });
+      // Show or hide back button
+      if (sectionId === 'student-dashboard-section') {
+        studentBackBtn.classList.add('hidden');
+      } else {
+        studentBackBtn.classList.remove('hidden');
+      }
+      // Close sidebar on mobile when navigating
+      if (window.innerWidth <= 768) {
+        studentSidebar.classList.remove('open');
       }
     }
 
@@ -1643,6 +1756,55 @@
       alert('Profile updated successfully.');
     });
 
+    // Student profile form submit with username and password update
+    const studentProfileForm = document.getElementById('student-profile-form');
+    const studentNameInputProfile = document.getElementById('student-name-input');
+    const studentEmailInputProfile = document.getElementById('student-email-input');
+    const studentPhoneInputProfile = document.getElementById('student-phone-input');
+    const studentUsernameInputProfile = document.getElementById('student-username-input');
+    const studentPasswordInputProfile = document.getElementById('student-password-input');
+
+    studentProfileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = studentNameInputProfile.value.trim();
+      const email = studentEmailInputProfile.value.trim();
+      const phone = studentPhoneInputProfile.value.trim();
+      const newUsername = studentUsernameInputProfile.value.trim();
+      const newPassword = studentPasswordInputProfile.value;
+
+      if (!name || !phone || !newUsername) {
+        alert('Please fill all required profile fields including username.');
+        return;
+      }
+
+      const users = getUsers();
+      const studentIndex = users.findIndex((u) => u.id === currentUser.id);
+      if (studentIndex === -1) {
+        alert('Student user not found.');
+        return;
+      }
+
+      // Check username uniqueness except current student
+      if (users.some((u, idx) => u.username.toLowerCase() === newUsername.toLowerCase() && idx !== studentIndex)) {
+        alert('Username already exists. Please choose another.');
+        return;
+      }
+
+      users[studentIndex].name = name;
+      users[studentIndex].email = email;
+      users[studentIndex].phone = phone;
+      users[studentIndex].username = newUsername;
+      if (newPassword.trim() !== '') {
+        users[studentIndex].password = newPassword;
+      }
+      setUsers(users);
+      currentUser = users[studentIndex];
+      setLoggedInUser(currentUser);
+      studentUsernameDisplay.textContent = currentUser.name;
+      studentNameDisplay.textContent = currentUser.name;
+      alert('Profile updated successfully.');
+    });
+
     // Admin navigation buttons click
     adminNavButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -1709,7 +1871,7 @@
       });
     });
 
-    // Sidebar toggle for mobile
+    // Sidebar toggle for mobile (admin)
     sidebarToggleBtn.addEventListener('click', () => {
       sidebarNav.classList.toggle('open');
     });
@@ -1733,6 +1895,7 @@
       loginScreen.classList.remove('hidden');
       loginForm.reset();
       roleSelect.value = '';
+      if (studentSidebar.classList.contains('open')) studentSidebar.classList.remove('open');
     });
 
     // Login form submit
@@ -1781,6 +1944,15 @@
         updateStudentAttendance();
         updateStudentExamSchedule();
         updateStudentResultsList();
+        showStudentSection('student-dashboard-section');
+        // Highlight dashboard nav button
+        studentNavButtons.forEach((b) => {
+          if (b.getAttribute('data-section') === 'dashboard') {
+            b.classList.add('bg-indigo-100');
+          } else {
+            b.classList.remove('bg-indigo-100');
+          }
+        });
       }
       loginForm.reset();
       roleSelect.value = '';
@@ -1966,6 +2138,62 @@
       updateStudentsListTable();
     });
 
+    // Student sidebar navigation buttons click
+    studentNavButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        studentNavButtons.forEach((b) => b.classList.remove('bg-indigo-100'));
+        btn.classList.add('bg-indigo-100');
+        const section = btn.getAttribute('data-section');
+        if (section === 'dashboard') {
+          showStudentSection('student-dashboard-section');
+        } else if (section === 'profile') {
+          showStudentSection('student-profile-section');
+          // Load profile data
+          studentNameInputProfile.value = currentUser.name || '';
+          studentEmailInputProfile.value = currentUser.email || '';
+          studentPhoneInputProfile.value = currentUser.phone || '';
+          studentUsernameInputProfile.value = currentUser.username || '';
+          studentPasswordInputProfile.value = '';
+        }
+      });
+    });
+
+    // Student dashboard buttons click
+    const studentOpenAttendanceBtn = document.getElementById('student-open-attendance');
+    const studentOpenExamScheduleBtn = document.getElementById('student-open-exam-schedule');
+    const studentOpenResultsBtn = document.getElementById('student-open-results');
+
+    studentOpenAttendanceBtn.addEventListener('click', () => {
+      showStudentSection('student-attendance-section');
+      updateStudentAttendance();
+      populateStudentFilterBatches();
+    });
+    studentOpenExamScheduleBtn.addEventListener('click', () => {
+      showStudentSection('student-exam-schedule-section');
+      updateStudentExamSchedule();
+    });
+    studentOpenResultsBtn.addEventListener('click', () => {
+      showStudentSection('student-results-section');
+      updateStudentResultsList();
+    });
+
+    // Student back button click
+    studentBackBtn.addEventListener('click', () => {
+      showStudentSection('student-dashboard-section');
+      studentNavButtons.forEach((b) => {
+        if (b.getAttribute('data-section') === 'dashboard') {
+          b.classList.add('bg-indigo-100');
+        } else {
+          b.classList.remove('bg-indigo-100');
+        }
+      });
+    });
+
+    // Student sidebar toggle for mobile
+    studentSidebarToggleBtn.addEventListener('click', () => {
+      studentSidebar.classList.toggle('open');
+    });
+
     // Initial UI setup on page load if user is logged in
     if (currentUser) {
       loginScreen.classList.add('hidden');
@@ -1988,9 +2216,16 @@
         updateStudentAttendance();
         updateStudentExamSchedule();
         updateStudentResultsList();
+        showStudentSection('student-dashboard-section');
+        studentNavButtons.forEach((b) => {
+          if (b.getAttribute('data-section') === 'dashboard') {
+            b.classList.add('bg-indigo-100');
+          } else {
+            b.classList.remove('bg-indigo-100');
+          }
+        });
       }
     }
-
   </script>
 </body>
 </html>
