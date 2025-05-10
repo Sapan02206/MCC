@@ -2189,6 +2189,12 @@
       });
     });
 
+    // Fix: Enable mobile sidebar toggle for student dashboard {change by sapan desai}
+studentSidebarToggleBtn.addEventListener('click', () => {
+  studentSidebar.classList.toggle('hidden');
+});
+
+
     // Student sidebar toggle for mobile
     studentSidebarToggleBtn.addEventListener('click', () => {
       studentSidebar.classList.toggle('open');
@@ -2229,4 +2235,5 @@
   </script>
 </body>
 </html>
+
 
