@@ -2189,15 +2189,9 @@
       });
     });
 
-    // Fix: Enable mobile sidebar toggle for student dashboard {change by sapan desai}
-studentSidebarToggleBtn.addEventListener('click', () => {
-  studentSidebar.classList.toggle('hidden');
-});
-
-
     // Student sidebar toggle for mobile
     studentSidebarToggleBtn.addEventListener('click', () => {
-      studentSidebar.classList.toggle('open');
+      studentSidebar.classList.toggle('hidden');
     });
 
     // Initial UI setup on page load if user is logged in
